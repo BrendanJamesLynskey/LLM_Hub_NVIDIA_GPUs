@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NVIDIA GPU Architectures &mdash; LLM Hub</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a; --bg-card: #0d1117; --bg-code: #161b22;
+            --text-primary: #e6edf3; --text-secondary: #8b949e;
+            --accent: #76B900; --accent-dim: #76B90044; --accent-glow: #76B90033;
+            --border: #21262d;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --font-body: 'Inter', sans-serif;
+            --max-width: 960px;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { background: var(--bg-primary); color: var(--text-primary);
+               font-family: var(--font-body); font-size: 17px; line-height: 1.7;
+               overflow-x: hidden; }
+        .hero { min-height: 60vh; display: flex; flex-direction: column;
+                justify-content: center; align-items: center;
+                padding: 4rem 1.5rem 3rem; text-align: center; position: relative; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 50%;
+                        transform: translateX(-50%); width: 600px; height: 600px;
+                        background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+                        pointer-events: none; z-index: 0; }
+        .hero > * { position: relative; z-index: 1; }
+        .series-label { font-family: var(--font-mono); font-size: 0.85rem;
+                        color: var(--accent); letter-spacing: 0.15em;
+                        text-transform: uppercase; margin-bottom: 1rem; }
+        .hero h1 { font-family: var(--font-display);
+                   font-size: clamp(2rem, 5vw, 3rem); font-weight: 700;
+                   color: var(--text-primary); line-height: 1.2; margin-bottom: 1rem; }
+        .hero h1 .accent { color: var(--accent); }
+        .hero .subtitle { font-size: 1.1rem; color: var(--text-secondary);
+                          max-width: 720px; margin-bottom: 1.5rem; }
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem;
+                justify-content: center; margin-bottom: 1rem; }
+        .tag { font-family: var(--font-mono); font-size: 0.75rem;
+               padding: 0.25rem 0.75rem; border-radius: 999px;
+               border: 1px solid var(--accent); color: var(--accent);
+               background: var(--accent-dim); white-space: nowrap; }
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 2rem 1.5rem; }
+        h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700;
+             color: var(--accent); margin: 1rem 0 1.25rem; }
+        .deck-list { display: flex; flex-direction: column; gap: 0.6rem;
+                     list-style: none; padding: 0; counter-reset: deck; }
+        .deck-card { display: flex; gap: 1rem; padding: 1rem 1.25rem;
+                     background: var(--bg-card); border: 1px solid var(--border);
+                     border-left: 3px solid var(--accent); border-radius: 6px;
+                     transition: border-color 0.15s; counter-increment: deck; }
+        .deck-card:hover { border-color: var(--accent); }
+        .deck-card.roadmap { border-left-color: #ffa657; }
+        .deck-card.roadmap:hover { border-color: #ffa657; }
+        .deck-card .num { font-family: var(--font-mono); font-size: 0.8rem;
+                          color: var(--accent); min-width: 2rem;
+                          padding-top: 0.15rem; }
+        .deck-card.roadmap .num { color: #ffa657; }
+        .deck-card .num::before { content: counter(deck, decimal-leading-zero); }
+        .deck-card .body { flex: 1; min-width: 0; }
+        .deck-card .deck-title { font-family: var(--font-display); font-size: 1.05rem;
+                                 font-weight: 600; color: var(--text-primary);
+                                 margin-bottom: 0.2rem; }
+        .deck-card a.deck-title { text-decoration: none; }
+        .deck-card a.deck-title:hover { color: var(--accent); }
+        .deck-card .desc { font-size: 0.92rem; color: var(--text-secondary); }
+        .deck-card .meta { font-family: var(--font-mono); font-size: 0.7rem;
+                           color: var(--text-secondary); margin-top: 0.4rem;
+                           display: flex; gap: 0.6rem; flex-wrap: wrap; }
+        .badge { display: inline-block; font-family: var(--font-mono);
+                 font-size: 0.65rem; padding: 0.1rem 0.5rem; border-radius: 999px;
+                 border: 1px solid var(--border); color: var(--text-secondary); }
+        .badge.live { border-color: var(--accent); color: var(--accent);
+                      background: var(--accent-dim); }
+        .badge.roadmap { border-color: #ffa657; color: #ffa657;
+                         background: rgba(255,166,87,0.08); }
+        .callout { background: var(--bg-card); border-left: 3px solid var(--accent);
+                   border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin: 1.5rem 0; }
+        .callout p { margin-bottom: 0; color: var(--text-secondary); }
+        .callout p strong { color: var(--text-primary); }
+        .footer { text-align: center; padding: 3rem 1.5rem;
+                  color: var(--text-secondary); font-size: 0.85rem;
+                  border-top: 1px solid var(--border); max-width: var(--max-width);
+                  margin: 3rem auto 0; }
+        .footer a { color: var(--accent); text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 1.8rem; }
+            .deck-card { flex-direction: column; gap: 0.3rem; }
+        }
+    </style>
+
+</head>
+<body>
+<header class="hero">
+    <div class="series-label">LLM Hub &mdash; NVIDIA GPU Architectures</div>
+    <h1><span class="accent">NVIDIA GPU</span> Architectures</h1>
+    <p class="subtitle">Deep technical tour of NVIDIA GPUs from Pascal to Blackwell &mdash; SMs, tensor cores, memory hierarchy, NVLink, packaging, power, plus per-architecture low-level deep dives and the DGX Spark workstation.</p>
+    <div class="tags"><span class="tag">Pascal</span><span class="tag">Volta</span><span class="tag">Turing</span><span class="tag">Ampere</span><span class="tag">Hopper</span><span class="tag">Ada</span><span class="tag">Blackwell</span><span class="tag">DGX Spark</span></div>
+</header>
+<main class="container">
+    <h2>Presentations in This Series</h2>
+    <ol class="deck-list">
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_01_Architecture_Overview/">The NVIDIA GPU Family Tree — Pascal to Blackwell &rarr;</a><div class="desc">Family timeline, process nodes, dies, transistor counts, memory types and what each generation unlocked. Interactive family explorer.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_02_SM_Evolution/">Inside the SM — How NVIDIA's Streaming Multiprocessor Evolved &rarr;</a><div class="desc">SM internals across Pascal, Volta, Turing, Ampere, Hopper, Ada and Blackwell — schedulers, register file, tensor cores, TMA, clusters.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_03_Tensor_Cores/">Tensor Cores — Five Generations &rarr;</a><div class="desc">Every generation from Volta's 4×4×4 FP16 to Blackwell's MX-FP4 — formats, MMA shapes, sparsity, Transformer Engine.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_04_Memory_Hierarchy/">Memory Hierarchy &rarr;</a><div class="desc">Registers, shared, L1/L2, HBM2e/3/3e, GDDR6/6X/7, LPDDR5x unified, Hopper TMA. Decode-speed estimator.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_05_NVLink_NVSwitch/">NVLink &amp; NVSwitch &rarr;</a><div class="desc">Scale-up interconnect from NVLink 1 (Pascal) to NVLink 5 (NVL72), NVLink-C2C, the rack-scale superpod.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_06_Ampere/">Ampere — A100, RTX 30, the LLM Era &rarr;</a><div class="desc">GA100 + GA10x — 3rd-gen tensor cores (TF32, BF16, 2:4 sparsity), MIG, NVLink 3 with NVSwitch 2.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_07_Hopper/">Hopper — H100, FP8, Transformer Engine &rarr;</a><div class="desc">GH100, H100/H200/GH200 — 4th-gen tensor cores, native FP8, TMA, thread-block clusters and DSMEM, DPX, NVLink 4.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_08_Ada_Lovelace/">Ada Lovelace — RTX 40, L40S, Consumer-Class AI &rarr;</a><div class="desc">AD102 + RTX 40 / L40S / L4 — 4th-gen RT cores, DLSS 3, the FP8 split, no-NVLink consequences.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_09_Blackwell/">Blackwell — Dual-Die, FP4, NVL72 &rarr;</a><div class="desc">B100/B200/GB200 — dual-die NV-HBI, 5th-gen tensor cores with MX-FP4, 2nd-gen Transformer Engine, RAS engine, NVLink 5, NVL72 superpod.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_10_Software_and_Performance/">Software Stack &amp; Performance &rarr;</a><div class="desc">CUDA stack — driver, cuBLAS, cuDNN, CUTLASS, Transformer Engine, NCCL, Triton, TensorRT-LLM. End-to-end LLM tok/s calculator.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_11_Datacenter_Platforms/">DGX, HGX, MGX — Datacenter Reference Platforms &rarr;</a><div class="desc">Datacenter platforms, OAM, BasePOD and SuperPOD blueprints, NVL72, the OEM ecosystem and DGX Cloud.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_12_Consumer_Workstation_Products/">GeForce, RTX Pro, Tesla, A/H/L/B — Decoding the Lineup &rarr;</a><div class="desc">Field guide to every NVIDIA product family — naming logic, EULA boundaries, driver branches, the same-die-different-card patterns.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_13_Networking_InfiniBand_BlueField/">Networking — InfiniBand, ConnectX, BlueField &rarr;</a><div class="desc">Cross-node fabric — ConnectX HCAs, Quantum IB and Spectrum-X switches, BlueField DPUs, GPUDirect RDMA / Storage, NCCL, SHARP.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_14_PCIe_and_GPUDirect/">PCIe &amp; GPUDirect &rarr;</a><div class="desc">PCIe 3 to 6, Resizable BAR, IOMMU, ACS, NUMA pinning, GPUDirect P2P/RDMA/Storage. Topology lint.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_15_Grace_CPU_and_GH_GB/">Grace — NVIDIA's ARM CPU, GH200, GB200 &rarr;</a><div class="desc">Grace 72-core Neoverse V2, NVLink-C2C 900 GB/s, GH200, GB200, Extended GPU Memory, DGX Spark.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_16_Jetson_and_Edge/">Jetson — Edge AI &amp; Robotics &rarr;</a><div class="desc">Orin Nano (7W) through AGX Orin (60W) and Jetson Thor — JetPack, L4T, Holoscan, Isaac, DeepStream.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_17_Profiling_and_Debug/">Profiling &amp; Debug — Nsight, NVTX, CUPTI &rarr;</a><div class="desc">Nsight Systems, Nsight Compute, NVTX, CUPTI, DCGM, nvbandwidth — workflow from 'cluster slow' to 'fix line 42'.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_18_GPU_Sharing_MIG_MPS_vGPU/">Sharing the GPU — MIG, MPS, vGPU &rarr;</a><div class="desc">Hardware-partitioned MIG, MPS multiplexing, vGPU virtualisation, Kubernetes time-slicing — isolation, performance, licensing trade-offs.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_19_TensorRT_LLM/">TensorRT-LLM — NVIDIA's Optimised Inference Engine &rarr;</a><div class="desc">Engine builder, in-flight batching, paged KV-cache, FP8/FP4 quantisation, speculative decoding, TP/PP/EP.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_20_NeMo_NIM_AI_Enterprise/">NeMo, NIM &amp; AI Enterprise &rarr;</a><div class="desc">NeMo Framework, Aligner (RLHF/DPO/PPO), Curator, Guardrails, NIM microservices, Base Command, Run.ai, AI Enterprise bundle.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_21_PTX_and_SASS/">PTX &amp; SASS — The Real GPU ISAs &rarr;</a><div class="desc">PTX portable IR and per-arch SASS — HMMA / WGMMA tensor-core ops, LDMATRIX, BAR.SYNC, predication, ptxas optimisations.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_22_Warp_Scheduling_SIMT/">Warp Scheduling &amp; SIMT &rarr;</a><div class="desc">SM partitions, warp schedulers, instruction latencies, occupancy vs ILP, divergence, predication, independent thread scheduling.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_23_HBM_Internals/">HBM Internals &rarr;</a><div class="desc">HBM2e/3/3e/4 internals — TSVs, channels and pseudo-channels, banks, refresh, ECC modes, the HBM PHY, CoWoS packaging.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_24_Power_and_Thermal/">Power &amp; Thermal — 1000 W on a Card &rarr;</a><div class="desc">12V-2x6, multi-phase VRMs, multi-rail, transient response, GPU Boost, P-states, vapour chambers, direct-to-chip liquid cooling.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_25_Process_and_Packaging/">Process &amp; Packaging &rarr;</a><div class="desc">TSMC process lineage 16FF to N3/A16, 830 mm² reticle limit, NV-HBI, CoWoS-S/L/R, defect density, the CoWoS supply bottleneck.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_26_Pascal_Low_Level/">Inside Pascal — First HBM &amp; NVLink &rarr;</a><div class="desc">GP100 (P100) and GP102/104/106 — block diagram, FP-heavy SM, FP16x2 packed math, TSMC 16FF+, HBM2, GDDR5X, NVLink 1.0.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_27_Volta_Low_Level/">Inside Volta — First Tensor Cores &rarr;</a><div class="desc">GV100 — TSMC 12FF, four-partition SM with split FP/INT, first-gen tensor cores at 125 TFLOPS, independent thread scheduling, NVLink 2.0 / NVSwitch 1.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_28_Turing_Low_Level/">Inside Turing — RT Cores, INT8/INT4 Tensor Cores &rarr;</a><div class="desc">TU102/104/106/116/117 — 1st-gen RT cores, 2nd-gen tensor cores (INT8/INT4), GDDR6, NVLink 2.0 bridge, Tesla T4.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_29_Ampere_Low_Level/">Inside Ampere — 3rd-Gen Tensor Cores, MIG &rarr;</a><div class="desc">GA100 (TSMC 7N) and GA10x (Samsung 8N), TF32/BF16/2:4 sparsity, the 40 MB L2 leap, async copy, MIG, NVLink 3.0.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_30_Ada_Low_Level/">Inside Ada — AD102, 96 MB L2, 4th-Gen RT &rarr;</a><div class="desc">AD102–107 on TSMC 4N — doubled-FP32 SM, 4th-gen tensor cores, 4th-gen RT with OMM/DMM, OFA, 96 MB L2, GDDR6X, the 12VHPWR saga.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_31_Hopper_Low_Level/">Inside Hopper — FP8, TMA, Clusters &rarr;</a><div class="desc">GH100 / H100 / H200 / GH200 — 4th-gen tensor cores at 1979 TFLOPS, WGMMA, TMA, thread-block clusters and DSMEM, DPX, NVLink 4.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_32_Blackwell_Low_Level/">Inside Blackwell — Dual-Die, MX-FP4, NVLink 5 &rarr;</a><div class="desc">Dual-die B100/B200 with NV-HBI on CoWoS-L, 5th-gen tensor cores at 9 PFLOPS MX-FP4, 2nd-gen Transformer Engine, NVLink 5, NVL72, RTX 50.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_33_DGX_Spark_Hardware/">Inside the DGX Spark — GB10 Hardware &rarr;</a><div class="desc">GB10 SoC with 20 ARM cores + Blackwell GPU, NVLink-C2C, 128 GB unified LPDDR5x at 273 GB/s, ~1 PFLOP sparse FP4 at 170 W.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_34_DGX_Spark_Setup/">Setting Up DGX Spark &rarr;</a><div class="desc">Unboxing, OOBE, DGX OS (Ubuntu ARM64), CUDA toolkit, Container Toolkit, SSH, networking, NGC login, first NIM/Ollama/vLLM model.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_35_DGX_Spark_Inference/">LLM Inference on DGX Spark — Numbers &rarr;</a><div class="desc">Realistic tok/s 1B&ndash;671B, framework choice (Ollama/vLLM/NIM/TRT-LLM), quant choice (BF16/FP8/MX-FP4/AWQ-INT4), KV placement.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_36_DGX_Spark_DevWorkflow/">DGX Spark Development Workflow &rarr;</a><div class="desc">VS Code Remote SSH, NGC containers, PyTorch on ARM64, JupyterHub, QLoRA at 70B, dataset streaming, HF→MX-FP4→NIM, custom Triton.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+<li class="deck-card"><div class="num"></div><div class="body"><a class="deck-title" href="https://brendanjameslynskey.github.io/NVIDIA_GPU_37_DGX_Spark_vs_Alternatives/">DGX Spark vs Alternatives &rarr;</a><div class="desc">Mac Studio M3 Ultra, RTX 5090, RTX PRO 6000 Blackwell, used DGX Station A100, cloud H100/B200, two-Spark pair — capacity, bandwidth, cost-per-token.</div><div class="meta"><span class="badge live">live</span></div></div></li>
+    </ol>
+    
+</main>
+
+<footer class="footer">
+    <p>Part of the <a href="https://github.com/BrendanJamesLynskey/LLMs">LLMs hub</a> &mdash; an index of presentation series for AI/LLM engineers.</p>
+</footer>
+
+</body>
+</html>
