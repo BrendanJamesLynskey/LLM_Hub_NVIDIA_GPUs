@@ -45,6 +45,7 @@ Deep technical tour of NVIDIA GPUs from Pascal to Blackwell &mdash; SMs, tensor 
 | 35 | [LLM Inference on DGX Spark — Numbers](https://brendanjameslynskey.github.io/NVIDIA_GPU_35_DGX_Spark_Inference/) | live | Realistic tok/s 1B&ndash;671B, framework choice (Ollama/vLLM/NIM/TRT-LLM), quant choice (BF16/FP8/MX-FP4/AWQ-INT4), KV placement. |
 | 36 | [DGX Spark Development Workflow](https://brendanjameslynskey.github.io/NVIDIA_GPU_36_DGX_Spark_DevWorkflow/) | live | VS Code Remote SSH, NGC containers, PyTorch on ARM64, JupyterHub, QLoRA at 70B, dataset streaming, HF→MX-FP4→NIM, custom Triton. |
 | 37 | [DGX Spark vs Alternatives](https://brendanjameslynskey.github.io/NVIDIA_GPU_37_DGX_Spark_vs_Alternatives/) | live | Mac Studio M3 Ultra, RTX 5090, RTX PRO 6000 Blackwell, used DGX Station A100, cloud H100/B200, two-Spark pair — capacity, bandwidth, cost-per-token. |
+| 38 | [BFP4 — NVFP4 &amp; MXFP4 Block-Float Formats](https://brendanjameslynskey.github.io/NVIDIA_GPU_38_BFP4_Formats/) | live | Bit-level deep dive into the two 4-bit block-floating-point formats on Blackwell — OCP MXFP4 (32-element block, E8M0 scale) and NVIDIA NVFP4 (16-element block, FP8 + FP32 two-level scale) — with history from 1980s DSP BFP through MSFP and OCP MX, FP4 E2M1 lattice, 5th-gen tensor-core MMA path, throughput across Volta–Blackwell, quality and bandwidth comparison vs FP8/FP6/INT4, and an interactive block decoder. |
 
 ## Where this fits
 
