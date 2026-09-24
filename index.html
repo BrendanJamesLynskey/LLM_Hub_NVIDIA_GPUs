@@ -10,10 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0a0a0a; --bg-card: #0d1117; --bg-code: #161b22;
-            --text-primary: #e6edf3; --text-secondary: #8b949e;
-            --accent: #76B900; --accent-dim: #76B90044; --accent-glow: #76B90033;
-            --border: #21262d;
+            --bg-primary: #1b1b1a; --bg-card: #212120; --bg-code: #292928;
+            --text-primary: #edede7; --text-secondary: #9b9b95;
+            --accent: #b8b315; --accent-dim: #b8b31544; --accent-glow: #b8b31533;
+            --border: #363633;
             --font-display: 'Space Grotesk', sans-serif;
             --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
             --font-body: 'Inter', sans-serif;
@@ -57,12 +57,12 @@
                      border-left: 3px solid var(--accent); border-radius: 6px;
                      transition: border-color 0.15s; counter-increment: deck; }
         .deck-card:hover { border-color: var(--accent); }
-        .deck-card.roadmap { border-left-color: #ffa657; }
-        .deck-card.roadmap:hover { border-color: #ffa657; }
+        .deck-card.roadmap { border-left-color: #e0b172; }
+        .deck-card.roadmap:hover { border-color: #e0b172; }
         .deck-card .num { font-family: var(--font-mono); font-size: 0.8rem;
                           color: var(--accent); min-width: 2rem;
                           padding-top: 0.15rem; }
-        .deck-card.roadmap .num { color: #ffa657; }
+        .deck-card.roadmap .num { color: #e0b172; }
         .deck-card .num::before { content: counter(deck, decimal-leading-zero); }
         .deck-card .body { flex: 1; min-width: 0; }
         .deck-card .deck-title { font-family: var(--font-display); font-size: 1.05rem;
@@ -79,8 +79,8 @@
                  border: 1px solid var(--border); color: var(--text-secondary); }
         .badge.live { border-color: var(--accent); color: var(--accent);
                       background: var(--accent-dim); }
-        .badge.roadmap { border-color: #ffa657; color: #ffa657;
-                         background: rgba(255,166,87,0.08); }
+        .badge.roadmap { border-color: #e0b172; color: #e0b172;
+                         background: rgba(224,177,114,0.08); }
         .callout { background: var(--bg-card); border-left: 3px solid var(--accent);
                    border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin: 1.5rem 0; }
         .callout p { margin-bottom: 0; color: var(--text-secondary); }
