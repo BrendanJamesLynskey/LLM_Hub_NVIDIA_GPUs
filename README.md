@@ -47,6 +47,10 @@ Deep technical tour of NVIDIA GPUs from Pascal to Blackwell &mdash; SMs, tensor 
 | 37 | [DGX Spark vs Alternatives](https://brendanjameslynskey.github.io/NVIDIA_GPU_37_DGX_Spark_vs_Alternatives/) | live | Mac Studio M3 Ultra, RTX 5090, RTX PRO 6000 Blackwell, used DGX Station A100, cloud H100/B200, two-Spark pair — capacity, bandwidth, cost-per-token. |
 | 38 | [BFP4 — NVFP4 &amp; MXFP4 Block-Float Formats](https://brendanjameslynskey.github.io/NVIDIA_GPU_38_BFP4_Formats/) | live | Bit-level deep dive into the two 4-bit block-floating-point formats on Blackwell — OCP MXFP4 (32-element block, E8M0 scale) and NVIDIA NVFP4 (16-element block, FP8 + FP32 two-level scale) — with history from 1980s DSP BFP through MSFP and OCP MX, FP4 E2M1 lattice, 5th-gen tensor-core MMA path, throughput across Volta–Blackwell, quality and bandwidth comparison vs FP8/FP6/INT4, and an interactive block decoder. |
 
+## Related
+
+**Related site:** [GPU Kernels Explained](https://gpu-kernels-explained.vercel.app/) ([code](https://github.com/BrendanJamesLynskey/gpu-kernels-explained)) is an interactive companion to this series: how a GPU executes the maths, in 11 chapters each built around an animation computed by a tested GPU execution model (A100 and H100 presets, every figure sourced): the memory hierarchy, the roofline, warps and divergence, coalescing, bank conflicts, occupancy, GEMM from naive to tensor cores, reductions and warp shuffles, online softmax and FlashAttention, split-K and overlap, and quantised kernels. Every chapter links the matching slides of the NVIDIA GPU series.
+
 ## Where this fits
 
 Part of the [LLMs hub](https://github.com/BrendanJamesLynskey/LLMs) &mdash; an index of presentation series for AI/LLM engineers.
