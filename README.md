@@ -1,3 +1,7 @@
+<!-- portfolio-strip:start (brief 40) -->
+<sub>**Brendan Lynskey** · [Portfolio home](https://brendanjameslynskey.github.io/) · [Interactive sites](https://brendanjameslynskey.github.io/#sites)</sub>
+<!-- portfolio-strip:end -->
+
 # NVIDIA GPU Architectures
 
 Deep technical tour of NVIDIA GPUs from Pascal to Blackwell &mdash; SMs, tensor cores, memory hierarchy, NVLink, packaging, power, plus per-architecture low-level deep dives and the DGX Spark workstation.
